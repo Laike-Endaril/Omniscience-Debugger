@@ -3,9 +3,9 @@ package com.fantasticsource.omniscience;
 import com.fantasticsource.mctools.MCTools;
 import com.fantasticsource.tools.Tools;
 import net.minecraft.client.Minecraft;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -55,8 +55,13 @@ public class ServerLagDetector implements Runnable
         while (go)
         {
             long i = currentTickStartTime;
-            long j = MinecraftServer.getCurrentTimeMillis();
-            if (MCTools.isClient() && Minecraft.getMinecraft().isGamePaused()) currentTickStartTime = j;
+            long j = System.currentTimeMillis();
+            if (FMLCommonHandler.instance().getMinecraftServerInstance().currentTask != null || (MCTools.isClient() && Minecraft.getMinecraft().isGamePaused()))
+            {
+                currentTickStartTime = j;
+                currentTickStartTime = j;
+                i = currentTickStartTime;
+            }
             long tickTime = j - i;
 
             if (tickTime >= checkTimes[2])
