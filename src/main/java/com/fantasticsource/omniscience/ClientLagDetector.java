@@ -1,6 +1,7 @@
 package com.fantasticsource.omniscience;
 
 import com.fantasticsource.tools.Tools;
+import net.minecraft.client.Minecraft;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
@@ -58,6 +59,7 @@ public class ClientLagDetector implements Runnable
         {
             long i = currentTickStartTime;
             long j = MinecraftServer.getCurrentTimeMillis();
+            if (Minecraft.getMinecraft().isGamePaused()) currentTickStartTime = j;
             long tickTime = j - i;
 
             if (tickTime >= checkTimes[2])
