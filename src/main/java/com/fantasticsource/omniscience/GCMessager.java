@@ -31,8 +31,12 @@ public class GCMessager
         if (gcRuns > prevGCRuns)
         {
             long gcTime = Debug.gcTime();
-            System.out.println(TextFormatting.YELLOW + "Garbage collector(s) ran " + (gcRuns - prevGCRuns) + " time(s) within the last server tick, spending ~" + (gcTime - prevGCTime) + "ms");
-            System.out.println(TextFormatting.YELLOW + "After GC... " + Debug.memData());
+            long gcTimeThisTick = gcTime - prevGCTime;
+            if (gcTimeThisTick > 50) //Only show message if GC is taking more than a full tick worth of time to complete
+            {
+                System.out.println(TextFormatting.YELLOW + "Garbage collector(s) just froze the server for ~" + gcTimeThisTick + "ms / ~" + ((double) (gcTimeThisTick / 5) / 10) + " ticks (ran " + (gcRuns - prevGCRuns) + " time(s))");
+                System.out.println(TextFormatting.YELLOW + "After GC... " + Debug.memData());
+            }
             prevGCRuns = gcRuns;
             prevGCTime = gcTime;
         }
