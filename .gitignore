@@ -15,10 +15,11 @@ out
 
 # gradle
 /build
+/classes
 .gradle
 
 # other
 /eclipse
 /run
 /server
-/asm
+/classes
