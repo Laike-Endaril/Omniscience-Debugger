@@ -19,19 +19,19 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class OmniEventBus extends EventBus
 {
-    public ConcurrentHashMap<Object, ArrayList<IEventListener>> listeners = new ConcurrentHashMap<>();
-    public Map<Object, ModContainer> listenerOwners;
-    public int busID;
+    public ConcurrentHashMap<Object, ArrayList<IEventListener>> listeners2 = (ConcurrentHashMap<Object, ArrayList<IEventListener>>) ReflectionTool.get(EventBus.class, "listeners", this);
+    public Map<Object, ModContainer> listenerOwners2 = (Map<Object, ModContainer>) ReflectionTool.get(EventBus.class, "listenerOwners", this);
 
     public OmniEventBus(EventBus originalBus)
     {
+        ReflectionTool.set(EventBus.class, "busID", this, ReflectionTool.get(EventBus.class, "busID", originalBus));
         ConcurrentHashMap<Object, ArrayList<IEventListener>> oldListeners = (ConcurrentHashMap<Object, ArrayList<IEventListener>>) ReflectionTool.get(EventBus.class, "listeners", originalBus);
         try
         {
             for (Map.Entry<Object, ArrayList<IEventListener>> entry : oldListeners.entrySet())
             {
                 ArrayList<IEventListener> newList = new ArrayList<>();
-                listeners.put(entry.getKey(), newList);
+                listeners2.put(entry.getKey(), newList);
                 for (IEventListener originalListener : entry.getValue())
                 {
                     if (originalListener instanceof ASMEventHandler) newList.add(new OmniASMEventHandler((ASMEventHandler) originalListener));
@@ -43,14 +43,13 @@ public class OmniEventBus extends EventBus
         {
             MCTools.crash(e, true);
         }
-        listenerOwners = (Map<Object, ModContainer>) ReflectionTool.get(EventBus.class, "listenerOwners", originalBus);
-        busID = (int) ReflectionTool.get(EventBus.class, "busID", originalBus);
+        listenerOwners2.putAll((Map<Object, ModContainer>) ReflectionTool.get(EventBus.class, "listenerOwners", originalBus));
     }
 
     @Override
     public void register(Object target)
     {
-        if (listeners.containsKey(target)) return;
+        if (listeners2.containsKey(target)) return;
 
         ModContainer activeModContainer = Loader.instance().activeModContainer();
         if (activeModContainer == null)
@@ -58,7 +57,7 @@ public class OmniEventBus extends EventBus
             FMLLog.log.error("Unable to determine registrant mod for {}. This is a critical error and should be impossible", target, new Throwable());
             activeModContainer = Loader.instance().getMinecraftModContainer();
         }
-        listenerOwners.put(target, activeModContainer);
+        listenerOwners2.put(target, activeModContainer);
         boolean isStatic = target.getClass() == Class.class;
         @SuppressWarnings("unchecked")
         Set<? extends Class<?>> supers = isStatic ? Sets.newHashSet((Class<?>) target) : TypeToken.of(target.getClass()).getTypes().rawTypes();
@@ -89,7 +88,7 @@ public class OmniEventBus extends EventBus
                             throw new IllegalArgumentException("Method " + method + " has @SubscribeEvent annotation, but takes a argument that is not an Event " + eventType);
                         }
 
-                        register(eventType, target, real, activeModContainer, listeners);
+                        register(eventType, target, real, activeModContainer, listeners2);
                         break;
                     }
                 }
@@ -108,7 +107,7 @@ public class OmniEventBus extends EventBus
             Constructor<?> ctr = eventType.getConstructor();
             ctr.setAccessible(true);
             Event event = (Event) ctr.newInstance();
-            final OmniASMEventHandler asm = new OmniASMEventHandler(target, method, owner, IGenericEvent.class.isAssignableFrom(eventType));
+            final OmniASMEventHandler asm = new OmniASMEventHandler(new ASMEventHandler(target, method, owner, IGenericEvent.class.isAssignableFrom(eventType)));
 
             IEventListener listener = asm;
             if (IContextSetter.class.isAssignableFrom(eventType))
@@ -123,7 +122,7 @@ public class OmniEventBus extends EventBus
                 };
             }
 
-            event.getListenerList().register(busID, asm.getPriority(), listener);
+            event.getListenerList().register((int) ReflectionTool.get(EventBus.class, "busID", this), asm.getPriority(), listener);
 
             ArrayList<IEventListener> others = listeners.computeIfAbsent(target, k -> new ArrayList<>());
             others.add(listener);

@@ -91,4 +91,14 @@ public class Omniscience
             ClientLagDetector.init(event);
         }
     }
+//
+//    @SubscribeEvent
+//    public static void test(LivingEvent.LivingJumpEvent event) throws InterruptedException
+//    {
+//        if (event.getEntityLiving() instanceof EntityPlayerMP)
+//        {
+//            System.out.println("test");
+//            Thread.sleep(2000);
+//        }
+//    }
 }
