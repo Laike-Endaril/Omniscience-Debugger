@@ -1,6 +1,7 @@
 package com.fantasticsource.omniscience.hack;
 
 import com.fantasticsource.tools.ReflectionTool;
+import net.minecraft.profiler.Profiler;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.eventhandler.ASMEventHandler;
@@ -40,12 +41,12 @@ public class OmniASMEventHandler extends ASMEventHandler
     @Override
     public void invoke(Event event)
     {
-        OmniProfiler profiler = Thread.currentThread().getName().equals("Server thread") ? (OmniProfiler) FMLCommonHandler.instance().getMinecraftServerInstance().profiler : null;
-        if (!dontProfile && profiler != null) profiler.startSection("@Subscribe " + event.getClass().getSimpleName() + "(" + modContainer.getName() + ")");
+        Profiler profiler = Thread.currentThread().getName().equals("Server thread") ? FMLCommonHandler.instance().getMinecraftServerInstance().profiler : null;
+        if (!dontProfile && profiler instanceof OmniProfiler) profiler.startSection("@Subscribe " + event.getClass().getSimpleName() + "(" + modContainer.getName() + ")");
 
         if (original != null) original.invoke(event);
         else super.invoke(event);
 
-        if (!dontProfile && profiler != null) profiler.endSection();
+        if (!dontProfile && profiler instanceof OmniProfiler) profiler.endSection();
     }
 }
