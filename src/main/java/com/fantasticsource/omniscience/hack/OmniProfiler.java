@@ -73,7 +73,7 @@ public class OmniProfiler extends Profiler
     {
         if (activeLevel == -1 && startingLevel == -1) return "Profiler is not running or starting";
 
-        if (!(stopper instanceof MinecraftServer)) listeners.add(stopper);
+        listeners.add(stopper);
         stoppingCallbacks.add(callback);
         info("Stopping profiler");
         return null;

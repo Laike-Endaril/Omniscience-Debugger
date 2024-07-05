@@ -79,6 +79,7 @@ public class CommandDebug extends CommandBase
         {
             writer = new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8);
             writer.write(profilerResults);
+            System.out.println("Saved profiler results to " + file);
         }
         catch (Throwable throwable)
         {
