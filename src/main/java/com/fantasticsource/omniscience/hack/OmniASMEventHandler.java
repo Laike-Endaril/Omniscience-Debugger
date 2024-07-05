@@ -1,6 +1,6 @@
 package com.fantasticsource.omniscience.hack;
 
-import net.minecraft.profiler.Profiler;
+import com.fantasticsource.tools.ReflectionTool;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.eventhandler.ASMEventHandler;
@@ -10,7 +10,17 @@ import java.lang.reflect.Method;
 
 public class OmniASMEventHandler extends ASMEventHandler
 {
-    protected ModContainer modContainer;
+    public static final Object DUMMY_TARGET = 0;
+    public static final Method DUMMY_METHOD = ReflectionTool.getMethod(String.class, "contains");
+
+    public ModContainer modContainer;
+    public ASMEventHandler original = null;
+    public boolean dontProfile;
+
+    public OmniASMEventHandler(ASMEventHandler original) throws Exception
+    {
+        this(DUMMY_TARGET, DUMMY_METHOD, (ModContainer) ReflectionTool.get(ASMEventHandler.class, "owner", original));
+    }
 
     @Deprecated
     public OmniASMEventHandler(Object target, Method method, ModContainer owner) throws Exception
@@ -22,6 +32,7 @@ public class OmniASMEventHandler extends ASMEventHandler
     {
         super(target, method, owner, isGeneric);
 
+        dontProfile = target == OmniProfiler.class;
         modContainer = owner;
     }
 
@@ -29,13 +40,12 @@ public class OmniASMEventHandler extends ASMEventHandler
     @Override
     public void invoke(Event event)
     {
-        //Omni start
-        Profiler profiler = Thread.currentThread().getName().equals("Server thread") ? FMLCommonHandler.instance().getMinecraftServerInstance().profiler : null;
-//        if (profiler != null) profiler.startSection("@Subscribe " + event.getClass().getSimpleName() + "(" + modContainer.getName() + ")");
-        //Omni end
+        OmniProfiler profiler = Thread.currentThread().getName().equals("Server thread") ? (OmniProfiler) FMLCommonHandler.instance().getMinecraftServerInstance().profiler : null;
+        if (!dontProfile && profiler != null) profiler.startSection("@Subscribe " + event.getClass().getSimpleName() + "(" + modContainer.getName() + ")");
 
-        super.invoke(event);
+        if (original != null) original.invoke(event);
+        else super.invoke(event);
 
-//        if (profiler != null) profiler.endSection(); //Omni
+        if (!dontProfile && profiler != null) profiler.endSection();
     }
 }

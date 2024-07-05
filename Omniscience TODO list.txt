@@ -34,7 +34,3 @@ Force profiler modes above 0 to only run for 1 tick
 Account for other threads (right now servers with heavy off-server-thread garbage will skew results)
 
 Finish output for total and peak
-
-
-
-Fix issues with OmniEventBus, or find another way to apply profiling to @SubscribeEvent

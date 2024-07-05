@@ -22,22 +22,27 @@ public class OmniProfiler extends Profiler
     public static final OmniProfiler INSTANCE = new OmniProfiler();
     public static final String[] VALID_MODES = new String[]{"total", "average", "peak"};
 
-    protected static final String ROOT_NAME = "ROOT";
-    protected static final String FILENAME = OmniProfiler.class.getSimpleName() + ".java";
+    public static final String ROOT_NAME = "ROOT";
+    public static final String FILENAME = OmniProfiler.class.getSimpleName() + ".java";
 
-    protected final LinkedHashMap<Long, SectionNode> PER_TICK_DATA = new LinkedHashMap<>();
-    protected SectionNode currentNode = null;
-    protected int startingLevel = -1, activeLevel = -1;
-    protected ArrayList<StringBuilder> stackComparisons = new ArrayList<>();
-    protected ArrayList<Predicate<Pair<ICommandSender, Results>>> stoppingCallbacks = new ArrayList<>();
-    protected Results lastRunResults = null;
-    protected HashSet<ICommandSender> listeners = new HashSet<>();
+    public final LinkedHashMap<Long, SectionNode> PER_TICK_DATA = new LinkedHashMap<>();
+    public SectionNode currentNode = null;
+    public int startingLevel = -1, activeLevel = -1;
+    public ArrayList<StringBuilder> stackComparisons = new ArrayList<>();
+    public ArrayList<Predicate<Pair<ICommandSender, Results>>> stoppingCallbacks = new ArrayList<>();
+    public Results lastRunResults = null;
+    public HashSet<ICommandSender> listeners = new HashSet<>();
 
-    protected long startNanos, startHeapAllocated, startGCNanos;
-    protected int startGCRuns;
+    public long startNanos, startHeapAllocated, startGCNanos;
+    public int startGCRuns;
 
     protected OmniProfiler()
     {
+    }
+
+    public boolean isRunning()
+    {
+        return activeLevel != -1;
     }
 
     public void reset()

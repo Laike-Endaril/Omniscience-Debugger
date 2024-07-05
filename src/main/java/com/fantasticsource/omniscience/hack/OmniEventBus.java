@@ -1,5 +1,6 @@
 package com.fantasticsource.omniscience.hack;
 
+import com.fantasticsource.mctools.MCTools;
 import com.fantasticsource.tools.ReflectionTool;
 import com.google.common.collect.Sets;
 import com.google.common.reflect.TypeToken;
@@ -19,21 +20,37 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class OmniEventBus extends EventBus
 {
-    protected static final Field
+    public static final Field
             EVENT_BUS_LISTENERS_FIELD = ReflectionTool.getField(EventBus.class, "listeners"),
             EVENT_BUS_LISTENER_OWNERS_FIELD = ReflectionTool.getField(EventBus.class, "listenerOwners"),
             EVENT_BUS_BUS_ID_FIELD = ReflectionTool.getField(EventBus.class, "busID");
 
-    protected ConcurrentHashMap<Object, ArrayList<IEventListener>> listeners;
-    protected Map<Object, ModContainer> listenerOwners;
-    protected int busID;
+    public ConcurrentHashMap<Object, ArrayList<IEventListener>> listeners = new ConcurrentHashMap<>();
+    public Map<Object, ModContainer> listenerOwners;
+    public int busID;
 
     public OmniEventBus(EventBus originalBus)
     {
-        listeners = (ConcurrentHashMap<Object, ArrayList<IEventListener>>) ReflectionTool.get(EVENT_BUS_LISTENERS_FIELD, originalBus);
+        ConcurrentHashMap<Object, ArrayList<IEventListener>> oldListeners = (ConcurrentHashMap<Object, ArrayList<IEventListener>>) ReflectionTool.get(EVENT_BUS_LISTENERS_FIELD, originalBus);
+        try
+        {
+            for (Map.Entry<Object, ArrayList<IEventListener>> entry : oldListeners.entrySet())
+            {
+                ArrayList<IEventListener> newList = new ArrayList<>();
+                listeners.put(entry.getKey(), newList);
+                for (IEventListener originalListener : entry.getValue())
+                {
+                    if (originalListener instanceof ASMEventHandler) newList.add(new OmniASMEventHandler((ASMEventHandler) originalListener));
+                    else newList.add(originalListener);
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            MCTools.crash(e, true);
+        }
         listenerOwners = (Map<Object, ModContainer>) ReflectionTool.get(EVENT_BUS_LISTENER_OWNERS_FIELD, originalBus);
         busID = (int) ReflectionTool.get(EVENT_BUS_BUS_ID_FIELD, originalBus);
-        throw new IllegalStateException("This should be disabled right now!");
     }
 
     @Override
@@ -122,5 +139,4 @@ public class OmniEventBus extends EventBus
             FMLLog.log.error("Error registering event handler: {} {} {}", owner, eventType, method, e);
         }
     }
-
 }
