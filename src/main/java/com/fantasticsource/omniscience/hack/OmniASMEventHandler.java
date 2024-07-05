@@ -21,6 +21,7 @@ public class OmniASMEventHandler extends ASMEventHandler
     public OmniASMEventHandler(ASMEventHandler original) throws Exception
     {
         this(DUMMY_TARGET, DUMMY_METHOD, (ModContainer) ReflectionTool.get(ASMEventHandler.class, "owner", original));
+        this.original = original;
     }
 
     @Deprecated

@@ -10,7 +10,6 @@ import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.eventhandler.*;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -20,18 +19,13 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class OmniEventBus extends EventBus
 {
-    public static final Field
-            EVENT_BUS_LISTENERS_FIELD = ReflectionTool.getField(EventBus.class, "listeners"),
-            EVENT_BUS_LISTENER_OWNERS_FIELD = ReflectionTool.getField(EventBus.class, "listenerOwners"),
-            EVENT_BUS_BUS_ID_FIELD = ReflectionTool.getField(EventBus.class, "busID");
-
     public ConcurrentHashMap<Object, ArrayList<IEventListener>> listeners = new ConcurrentHashMap<>();
     public Map<Object, ModContainer> listenerOwners;
     public int busID;
 
     public OmniEventBus(EventBus originalBus)
     {
-        ConcurrentHashMap<Object, ArrayList<IEventListener>> oldListeners = (ConcurrentHashMap<Object, ArrayList<IEventListener>>) ReflectionTool.get(EVENT_BUS_LISTENERS_FIELD, originalBus);
+        ConcurrentHashMap<Object, ArrayList<IEventListener>> oldListeners = (ConcurrentHashMap<Object, ArrayList<IEventListener>>) ReflectionTool.get(EventBus.class, "listeners", originalBus);
         try
         {
             for (Map.Entry<Object, ArrayList<IEventListener>> entry : oldListeners.entrySet())
@@ -49,8 +43,8 @@ public class OmniEventBus extends EventBus
         {
             MCTools.crash(e, true);
         }
-        listenerOwners = (Map<Object, ModContainer>) ReflectionTool.get(EVENT_BUS_LISTENER_OWNERS_FIELD, originalBus);
-        busID = (int) ReflectionTool.get(EVENT_BUS_BUS_ID_FIELD, originalBus);
+        listenerOwners = (Map<Object, ModContainer>) ReflectionTool.get(EventBus.class, "listenerOwners", originalBus);
+        busID = (int) ReflectionTool.get(EventBus.class, "busID", originalBus);
     }
 
     @Override
