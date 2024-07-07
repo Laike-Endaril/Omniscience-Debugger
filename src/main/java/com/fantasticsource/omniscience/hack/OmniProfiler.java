@@ -12,10 +12,10 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import sun.misc.SharedSecrets;
 
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 public class OmniProfiler extends Profiler
 {
@@ -87,9 +87,7 @@ public class OmniProfiler extends Profiler
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void serverTick(TickEvent.ServerTickEvent event)
     {
-        if (event.phase != TickEvent.Phase.START) return;
-
-        INSTANCE.tick();
+        if (event.phase == TickEvent.Phase.START) INSTANCE.tick();
     }
 
     protected void info(String info)
@@ -127,7 +125,7 @@ public class OmniProfiler extends Profiler
             stackComparisons.clear();
 
 
-            RuntimeState transitionState = endSection(true, true);
+            RuntimeState transitionState = endSection(true);
 
 
             if (stoppingCallbacks.size() > 0)
@@ -177,23 +175,8 @@ public class OmniProfiler extends Profiler
     @Override
     public void startSection(String name)
     {
-        startSection(name, false);
-    }
-
-    protected void startSection(String name, boolean force)
-    {
         if (activeLevel > -1)
         {
-            if (!force)
-            {
-                //Vanilla calls endSection() more times than it calls startSection()...
-                if (SharedSecrets.getJavaLangAccess().getStackTraceElement(new Throwable(), 2).getClassName().substring(0, 14).equals("net.minecraft."))
-                {
-                    return;
-                }
-            }
-
-
             if (activeLevel > 0)
             {
                 if (!Thread.currentThread().getName().equals("Server thread"))
@@ -214,23 +197,13 @@ public class OmniProfiler extends Profiler
     @Override
     public void endSection()
     {
-        endSection(false, false);
+        endSection(false);
     }
 
-    public RuntimeState endSection(boolean force, boolean isTickTransition)
+    public RuntimeState endSection(boolean isTickTransition)
     {
         if (activeLevel > -1)
         {
-            if (!force)
-            {
-                //Vanilla calls endSection() more times than it calls startSection()...
-                if (SharedSecrets.getJavaLangAccess().getStackTraceElement(new Throwable(), 2).getClassName().substring(0, 14).equals("net.minecraft."))
-                {
-                    return null;
-                }
-            }
-
-
             if (currentNode == null || (!isTickTransition && currentNode.parent == null))
             {
                 error("profiler.endSection() was called more times this tick than profiler.startSection()!  Stopping profiling and resetting profiler state!");
@@ -314,17 +287,14 @@ public class OmniProfiler extends Profiler
     @Override
     public void endStartSection(String name)
     {
-        if (activeLevel > -1)
-        {
-            //Vanilla calls endSection() more times than it calls startSection()...
-            if (SharedSecrets.getJavaLangAccess().getStackTraceElement(new Throwable(), 1).getClassName().substring(0, 14).equals("net.minecraft."))
-            {
-                return;
-            }
+        endSection();
+        startSection(name);
+    }
 
-            endSection();
-            startSection(name);
-        }
+    @Override
+    public void func_194340_a(Supplier<String> stringSupplier)
+    {
+        startSection(stringSupplier.get());
     }
 
     public static Results getLastRunResults()
@@ -455,7 +425,7 @@ public class OmniProfiler extends Profiler
         @Override
         public String toString()
         {
-            return toString(0, "", 0, 0);
+            return toString(-7, "", 0, 0);
         }
 
         public String toString(int depth, String cumulativePrefix, float gcNanosPerHeap, float rootNanos)
@@ -469,7 +439,8 @@ public class OmniProfiler extends Profiler
             StringBuilder stringBuilder = new StringBuilder();
             float nanos = (float) this.nanos, heapAllocated = (float) this.heapAllocated, gcNanos = (float) this.gcNanos, executions = (float) this.executions, direct, fromGC;
             String line;
-            switch (mode)
+            if (mode == null) return fullName;
+            else switch (mode)
             {
                 case "total":
                     if (parent == null) stringBuilder.append("--- START OF TOTAL RESULTS ---\n\n");

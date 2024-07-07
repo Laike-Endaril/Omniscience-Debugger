@@ -24,8 +24,6 @@ But earliest execution is still from a runtime agent (premain), and both require
 
 TODO =======================================================================================================================================
 
-Find a way to re-add vanilla entries, or to otherwise add entries to account for their absence
-
 Use a SortableTable to organize data
 Change post-profiling output commands to allow definition of columns you want to display
 

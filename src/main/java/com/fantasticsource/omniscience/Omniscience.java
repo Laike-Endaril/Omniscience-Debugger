@@ -9,6 +9,8 @@ import com.fantasticsource.omniscience.hack.OmniProfiler;
 import com.fantasticsource.tools.ReflectionTool;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Config;
@@ -26,7 +28,7 @@ public class Omniscience
 {
     public static final String MODID = "omnisciencedebugger";
     public static final String NAME = "Omniscience Debugger";
-    public static final String VERSION = "1.12.2.002b";
+    public static final String VERSION = "1.12.2.002c";
 
     static
     {
@@ -59,6 +61,7 @@ public class Omniscience
     {
         Debug.serverInit();
         ReflectionTool.set(MinecraftServer.class, new String[]{"field_71304_b", "profiler"}, event.getServer(), OmniProfiler.INSTANCE);
+        for (WorldServer world : event.getServer().worlds) ReflectionTool.set(World.class, new String[]{"field_72984_F", "profiler"}, world, OmniProfiler.INSTANCE);
     }
 
     @Mod.EventHandler
