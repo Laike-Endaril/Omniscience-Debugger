@@ -32,6 +32,7 @@ public class OmniProfiler extends Profiler
     public ArrayList<Predicate<Pair<ICommandSender, Results>>> stoppingCallbacks = new ArrayList<>();
     public Results lastRunResults = null;
     public HashSet<ICommandSender> listeners = new HashSet<>();
+    public Thread activeThread = null;
 
     public long startNanos, startHeapAllocated, startGCNanos;
     public int startGCRuns;
@@ -69,6 +70,7 @@ public class OmniProfiler extends Profiler
         }
 
         startingLevel = level;
+        activeThread = Thread.currentThread();
         info("Starting profiler");
         return null;
     }
@@ -177,9 +179,9 @@ public class OmniProfiler extends Profiler
     {
         if (isRunning())
         {
-            if (!Thread.currentThread().getName().equals("Server thread"))
+            if (Thread.currentThread() != activeThread)
             {
-                error("profiler.startSection() was called from somewhere besides the server thread!  Stopping profiling and resetting profiler state!");
+                error("Thread mismatch!  Required: " + activeThread + ", current: " + Thread.currentThread());
                 for (StackTraceElement element : Thread.currentThread().getStackTrace()) error(element.toString());
                 reset();
                 return;
@@ -201,6 +203,15 @@ public class OmniProfiler extends Profiler
     {
         if (isRunning())
         {
+            if (Thread.currentThread() != activeThread)
+            {
+                error("Thread mismatch!  Required: " + activeThread + ", current: " + Thread.currentThread());
+                for (StackTraceElement element : Thread.currentThread().getStackTrace()) error(element.toString());
+                reset();
+                return null;
+            }
+
+
             if (currentNode == null || (!isTickTransition && currentNode.parent == null))
             {
                 error("profiler.endSection() was called more times this tick than profiler.startSection()!  Stopping profiling and resetting profiler state!");
