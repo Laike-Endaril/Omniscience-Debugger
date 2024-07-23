@@ -61,7 +61,7 @@ public class OmniProfiler extends Profiler
     {
         if (!(starter instanceof MinecraftServer)) listeners.add(starter);
 
-        if (activeLevel > -1) return "Profiler is already running";
+        if (isRunning()) return "Profiler is already running";
         if (startingLevel >= level)
         {
             if (level == 0) return "Profiler is already starting";
@@ -110,7 +110,7 @@ public class OmniProfiler extends Profiler
 
     protected void tick()
     {
-        if (activeLevel > -1)
+        if (isRunning())
         {
             if (startingLevel > -1) throw new IllegalStateException("Profiler tried to start while already active!");
 
@@ -175,17 +175,14 @@ public class OmniProfiler extends Profiler
     @Override
     public void startSection(String name)
     {
-        if (activeLevel > -1)
+        if (isRunning())
         {
-            if (activeLevel > 0)
+            if (!Thread.currentThread().getName().equals("Server thread"))
             {
-                if (!Thread.currentThread().getName().equals("Server thread"))
-                {
-                    error("profiler.startSection() was called from somewhere besides the server thread!  Stopping profiling and resetting profiler state!");
-                    for (StackTraceElement element : Thread.currentThread().getStackTrace()) error(element.toString());
-                    reset();
-                    return;
-                }
+                error("profiler.startSection() was called from somewhere besides the server thread!  Stopping profiling and resetting profiler state!");
+                for (StackTraceElement element : Thread.currentThread().getStackTrace()) error(element.toString());
+                reset();
+                return;
             }
 
 
@@ -202,7 +199,7 @@ public class OmniProfiler extends Profiler
 
     public RuntimeState endSection(boolean isTickTransition)
     {
-        if (activeLevel > -1)
+        if (isRunning())
         {
             if (currentNode == null || (!isTickTransition && currentNode.parent == null))
             {
