@@ -433,7 +433,7 @@ public class OmniProfiler extends Profiler
         @Override
         public String toString()
         {
-            return toString(-7, "", 0, 0);
+            return toString(0, "", 0, 0);
         }
 
         public String toString(int depth, String cumulativePrefix, float gcNanosPerHeap, float rootNanos)
