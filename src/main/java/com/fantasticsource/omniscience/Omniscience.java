@@ -6,9 +6,12 @@ import com.fantasticsource.omniscience.client.PathVisualizer;
 import com.fantasticsource.omniscience.client.ScreenDebug;
 import com.fantasticsource.omniscience.hack.OmniEventBus;
 import com.fantasticsource.omniscience.hack.OmniProfiler;
+import com.fantasticsource.omniscience.hack.OmniTimeTracker;
 import com.fantasticsource.tools.ReflectionTool;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.entity.Entity;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.client.ClientCommandHandler;
@@ -22,6 +25,7 @@ import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.server.timings.TimeTracker;
 
 @Mod(modid = Omniscience.MODID, name = Omniscience.NAME, version = Omniscience.VERSION, dependencies = "required-after:fantasticlib@[1.12.2.044o,)", acceptableRemoteVersions = "*")
 public class Omniscience
@@ -33,6 +37,9 @@ public class Omniscience
     static
     {
         ReflectionTool.set(MinecraftForge.class, "EVENT_BUS", null, new OmniEventBus(MinecraftForge.EVENT_BUS));
+
+        ReflectionTool.set(TimeTracker.class, new String[]{"TILE_ENTITY_UPDATE"}, null, new OmniTimeTracker<TileEntity>());
+        ReflectionTool.set(TimeTracker.class, new String[]{"ENTITY_UPDATE"}, null, new OmniTimeTracker<Entity>());
 
 
         MinecraftForge.EVENT_BUS.register(Omniscience.class);
