@@ -43,7 +43,7 @@ public class AgentTest extends Agent
             if (cls.getName().equals("java.lang.Thread"))
             {
                 System.out.println(cls.getName());
-                instrumentation.addTransformer(new TestTransformer(cls), true);
+                instrumentation.addTransformer(new ThreadDebugTransformer(cls), true);
                 transformedClasses.add(cls);
             }
         }

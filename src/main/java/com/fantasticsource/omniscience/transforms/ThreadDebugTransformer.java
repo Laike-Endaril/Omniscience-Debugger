@@ -4,11 +4,11 @@ import java.io.IOException;
 import java.lang.instrument.ClassFileTransformer;
 import java.security.ProtectionDomain;
 
-public class TestTransformer implements ClassFileTransformer
+public class ThreadDebugTransformer implements ClassFileTransformer
 {
     private Class cls;
 
-    TestTransformer(Class cls)
+    ThreadDebugTransformer(Class cls)
     {
         this.cls = cls;
     }
