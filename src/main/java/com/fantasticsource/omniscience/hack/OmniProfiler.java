@@ -177,7 +177,7 @@ public class OmniProfiler extends Profiler
     @Override
     public void startSection(String name)
     {
-        if (isRunning())
+        if (isRunning() && Thread.currentThread() == activeThread)
         {
             if (Thread.currentThread() != activeThread)
             {
@@ -201,7 +201,7 @@ public class OmniProfiler extends Profiler
 
     public RuntimeState endSection(boolean isTickTransition)
     {
-        if (isRunning())
+        if (isRunning() && Thread.currentThread() == activeThread)
         {
             if (Thread.currentThread() != activeThread)
             {
@@ -223,15 +223,6 @@ public class OmniProfiler extends Profiler
 
             if (activeLevel > 0)
             {
-                if (!Thread.currentThread().getName().equals("Server thread"))
-                {
-                    error("profiler.endSection() was called from somewhere besides the server thread!  Stopping profiling and resetting profiler state!");
-                    for (StackTraceElement element : Thread.currentThread().getStackTrace()) error(element.toString());
-                    reset();
-                    return null;
-                }
-
-
                 StringBuilder stackComparison = new StringBuilder();
                 StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
                 DebugRuntimeState startState = (DebugRuntimeState) currentNode.startState;
