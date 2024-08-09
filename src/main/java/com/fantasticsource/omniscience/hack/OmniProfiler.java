@@ -121,6 +121,9 @@ public class OmniProfiler extends Profiler
             {
                 error("profiler.startSection() was called more times this tick than profiler.endSection()!  Stopping profiling and resetting profiler state!");
                 for (StringBuilder stackComparison : stackComparisons) error(stackComparison.toString());
+                System.out.println();
+                Tools.printStackTrace();
+                System.out.println();
                 reset();
                 return;
             }
@@ -216,6 +219,9 @@ public class OmniProfiler extends Profiler
             {
                 error("profiler.endSection() was called more times this tick than profiler.startSection()!  Stopping profiling and resetting profiler state!");
                 for (StringBuilder stackComparison : stackComparisons) error(stackComparison.toString());
+                System.out.println();
+                Tools.printStackTrace();
+                System.out.println();
                 reset();
                 return null;
             }
