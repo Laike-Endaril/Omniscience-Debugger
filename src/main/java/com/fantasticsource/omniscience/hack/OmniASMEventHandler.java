@@ -45,4 +45,10 @@ public class OmniASMEventHandler extends ASMEventHandler
 
         if (!dontProfile && profiler instanceof OmniProfiler) profiler.endSection();
     }
+
+    @Override
+    public String toString()
+    {
+        return original.toString();
+    }
 }
