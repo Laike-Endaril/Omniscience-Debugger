@@ -182,15 +182,6 @@ public class OmniProfiler extends Profiler
     {
         if (isRunning() && Thread.currentThread() == activeThread)
         {
-            if (Thread.currentThread() != activeThread)
-            {
-                error("Thread mismatch!  Required: " + activeThread + ", current: " + Thread.currentThread());
-                for (StackTraceElement element : Thread.currentThread().getStackTrace()) error(element.toString());
-                reset();
-                return;
-            }
-
-
             currentNode = currentNode.children.computeIfAbsent(name, o -> new SectionNode(name, currentNode));
             currentNode.startState = activeLevel > 0 ? new DebugRuntimeState() : new RuntimeState();
         }
@@ -206,15 +197,6 @@ public class OmniProfiler extends Profiler
     {
         if (isRunning() && Thread.currentThread() == activeThread)
         {
-            if (Thread.currentThread() != activeThread)
-            {
-                error("Thread mismatch!  Required: " + activeThread + ", current: " + Thread.currentThread());
-                for (StackTraceElement element : Thread.currentThread().getStackTrace()) error(element.toString());
-                reset();
-                return null;
-            }
-
-
             if (currentNode == null || (!isTickTransition && currentNode.parent == null))
             {
                 error("profiler.endSection() was called more times this tick than profiler.startSection()!  Stopping profiling and resetting profiler state!");
