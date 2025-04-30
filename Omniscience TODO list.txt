@@ -24,6 +24,12 @@ But earliest execution is still from a runtime agent (premain), and both require
 
 TODO =======================================================================================================================================
 
+Fix log spam issue from CodePointPrinter
+
+Differentiate between @Subscribe events based on method name in addition to mod container?
+
+Make a way to COMPARE two different sets of profiling results (from files) (showing the differences between the two as +/- values)
+
 Use a SortableTable to organize data
 Change post-profiling output commands to allow definition of columns you want to display
 
