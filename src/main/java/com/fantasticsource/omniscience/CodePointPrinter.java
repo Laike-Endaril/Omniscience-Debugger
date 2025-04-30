@@ -12,6 +12,7 @@ import static com.fantasticsource.omniscience.Omniscience.NAME;
 
 public class CodePointPrinter implements Runnable
 {
+    public static boolean enabled = false;
     private static final HashMap<Thread, Pair<StackTraceElement, Integer>> currentCodePoints = new HashMap<>();
     private static boolean go = false;
     private static int sameMethodIterationPrintCycle = 1;

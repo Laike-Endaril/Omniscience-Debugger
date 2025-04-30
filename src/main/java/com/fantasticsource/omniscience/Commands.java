@@ -32,7 +32,7 @@ public class Commands extends CommandBase
 
     static
     {
-        subcommands.addAll(Arrays.asList("threads", "nbt", "memory", "entities", "pathing", "ai", "profiling"));
+        subcommands.addAll(Arrays.asList("threads", "nbt", "memory", "entities", "pathing", "ai", "profiling", "codeprinter"));
     }
 
 
@@ -415,6 +415,12 @@ public class Commands extends CommandBase
                         if (flag != null) notifyCommandListener(sender, this, MODID + "." + cmd + "." + args[1] + "." + flag);
                         break;
                 }
+                break;
+
+
+            case "codeprinter":
+                boolean flag = CodePointPrinter.enabled = !CodePointPrinter.enabled;
+                notifyCommandListener(sender, this, MODID + "." + cmd + "." + flag);
                 break;
 
 

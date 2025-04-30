@@ -87,8 +87,11 @@ public class ClientLagDetector implements Runnable
                 go = false;
                 currentTickStartTime = 0;
 
-                startedCodePointPrinter = true;
-                CodePointPrinter.start();
+                if (CodePointPrinter.enabled)
+                {
+                    startedCodePointPrinter = true;
+                    CodePointPrinter.start();
+                }
             }
             else if (tickTime >= checkTimes[1])
             {

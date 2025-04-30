@@ -1,6 +1,7 @@
 package com.fantasticsource.omniscience.client;
 
 import com.fantasticsource.mctools.MCTools;
+import com.fantasticsource.omniscience.CodePointPrinter;
 import com.fantasticsource.omniscience.Omniscience;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
@@ -29,7 +30,7 @@ public class ClientCommands extends CommandBase implements IClientCommand
 
     static
     {
-        subcommands.addAll(Arrays.asList("screens", "nbt"));
+        subcommands.addAll(Arrays.asList("screens", "nbt", "codeprinter"));
     }
 
 
@@ -216,10 +217,16 @@ public class ClientCommands extends CommandBase implements IClientCommand
                                 notifyNBT(sender, compound);
                                 sender.sendMessage(new TextComponentString(""));
                             }
-                            else sender.sendMessage(new TextComponentString(Omniscience.MODID + ".error.noEntityFound"));
+                            else sender.sendMessage(new TextComponentString(I18n.translateToLocalFormatted(MODID + ".error.noEntityFound")));
                         }
                         break;
                 }
+                break;
+
+
+            case "codeprinter":
+                boolean flag = CodePointPrinter.enabled = !CodePointPrinter.enabled;
+                sender.sendMessage(new TextComponentString(I18n.translateToLocalFormatted(MODID + "." + cmd + "." + flag)));
                 break;
 
 

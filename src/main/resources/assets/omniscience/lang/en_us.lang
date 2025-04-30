@@ -26,6 +26,8 @@ omnisciencedebugger.cmd.pathing.stop=§cPathing is no longer visible for %s @ %s
 
 omnisciencedebugger.cmd.ai.comment=§dShows the AI tasks of the nearest entity
 
+omnisciencedebugger.cmd.codeprinter.comment=§dToggles whether currently running code is printed to the log when massive lag happens
+
 
 
 omnisciencedebugger.ccmd.screens.comment=§dShows info on recently shown GuiScreens
@@ -55,3 +57,6 @@ omnisciencedebugger.profiling.eventobjects.true=§aEvent object profiling is now
 omnisciencedebugger.profiling.eventobjects.false=§cEvent object profiling is now OFF
 omnisciencedebugger.profiling.eventmethods.true=§aEvent method profiling is now ON
 omnisciencedebugger.profiling.eventmethods.false=§cEvent method profiling is now OFF
+
+omnisciencedebugger.codeprinter.true=§aCode printing during massive lag is now ON
+omnisciencedebugger.codeprinter.false=§cCode printing during massive lag is now OFF

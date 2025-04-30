@@ -24,8 +24,6 @@ But earliest execution is still from a runtime agent (premain), and both require
 
 TODO =======================================================================================================================================
 
-Add commands to toggle CodePointPrinter (one for server and another for client)
-
 Improve profiler call overhead and/or account for it in results
 Might be able to improve it by doing a more direct push-to-queue somehow?
 
