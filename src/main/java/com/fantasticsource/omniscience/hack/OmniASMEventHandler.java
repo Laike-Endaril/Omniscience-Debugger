@@ -44,9 +44,9 @@ public class OmniASMEventHandler extends ASMEventHandler
     public void invoke(Event event)
     {
         Profiler profiler = Thread.currentThread().getName().equals("Server thread") ? FMLCommonHandler.instance().getMinecraftServerInstance().profiler : null;
-        if (profiler instanceof OmniProfiler)
+        if (profileEvents && profiler instanceof OmniProfiler)
         {
-            if (profileEvents) profiler.startSection("@Subscribe " + event.getClass().getSimpleName() + "(" + modContainer.getModId() + ")");
+            profiler.startSection("@Subscribe " + event.getClass().getSimpleName() + "(" + modContainer.getModId() + ")");
             if (profileEventObjects) profiler.startSection(callingObject);
             if (profileEventMethods) profiler.startSection(callingMethod);
         }
@@ -54,11 +54,11 @@ public class OmniASMEventHandler extends ASMEventHandler
         if (original != null) original.invoke(event);
         else super.invoke(event);
 
-        if (profiler instanceof OmniProfiler)
+        if (profileEvents && profiler instanceof OmniProfiler)
         {
             if (profileEventMethods) profiler.endSection();
             if (profileEventObjects) profiler.endSection();
-            if (profileEvents) profiler.endSection();
+            profiler.endSection();
         }
     }
 

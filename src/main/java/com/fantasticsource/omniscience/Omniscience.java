@@ -100,7 +100,7 @@ public class Omniscience
             ClientLagDetector.init(event);
         }
     }
-//
+
 //    @SubscribeEvent
 //    public static void test(LivingEvent.LivingJumpEvent event) throws InterruptedException
 //    {
@@ -108,6 +108,41 @@ public class Omniscience
 //        {
 //            System.out.println("test");
 //            Thread.sleep(2000);
+//        }
+//    }
+
+//    @SubscribeEvent
+//    public static void overheadTest(TickEvent.ServerTickEvent event)
+//    {
+//        if (event.phase == TickEvent.Phase.END)
+//        {
+//            Profiler profiler = FMLCommonHandler.instance().getMinecraftServerInstance().profiler;
+//
+//            profiler.startSection("t1");
+//            for (int i = 0; i < 1000000; i++)
+//            {
+//                profiler.startSection("test");
+//                profiler.endSection();
+//            }
+//            profiler.endSection();
+//
+//            profiler.startSection("t2");
+//            for (int i = 0; i < 1000000; i++)
+//            {
+//                profiler.startSection("loooooooooooooooooooooooooooooooooooooooooooooooooooongnametest");
+//                profiler.endSection();
+//            }
+//            profiler.endSection();
+//
+//            profiler.startSection("t3");
+//            for (int i = 0; i < 10; i++) profiler.startSection("t");
+//            for (int i = 0; i < 1000000; i++)
+//            {
+//                profiler.startSection("deeptest");
+//                profiler.endSection();
+//            }
+//            for (int i = 0; i < 10; i++) profiler.endSection();
+//            profiler.endSection();
 //        }
 //    }
 }

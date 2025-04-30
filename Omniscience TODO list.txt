@@ -24,7 +24,8 @@ But earliest execution is still from a runtime agent (premain), and both require
 
 TODO =======================================================================================================================================
 
-Improve profiler call overhead and/or account for it in results
+Improve profiler call overhead if possible
+If not, maybe account for it in results
 Might be able to improve it by doing a more direct push-to-queue somehow?
 
 Make a way to COMPARE two different sets of profiling results (from files) (showing the differences between the two as +/- values)
