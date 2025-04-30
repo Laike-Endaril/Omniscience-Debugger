@@ -2,6 +2,9 @@ package com.fantasticsource.omniscience;
 
 import com.fantasticsource.mctools.MCTools;
 import com.fantasticsource.omniscience.client.PathVisualizer;
+import com.fantasticsource.omniscience.hack.OmniASMEventHandler;
+import com.fantasticsource.omniscience.hack.OmniProfiler;
+import com.fantasticsource.omniscience.hack.OmniTimeTracker;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
@@ -19,6 +22,7 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import javax.annotation.Nullable;
 import java.util.*;
 
+import static com.fantasticsource.omniscience.Omniscience.MODID;
 import static net.minecraft.util.text.TextFormatting.AQUA;
 import static net.minecraft.util.text.TextFormatting.WHITE;
 
@@ -28,7 +32,7 @@ public class Commands extends CommandBase
 
     static
     {
-        subcommands.addAll(Arrays.asList("threads", "nbt", "memory", "entities", "pathing", "ai"));
+        subcommands.addAll(Arrays.asList("threads", "nbt", "memory", "entities", "pathing", "ai", "profiling"));
     }
 
 
@@ -72,17 +76,24 @@ public class Commands extends CommandBase
         switch (subcommand)
         {
             case "threads":
-                return AQUA + "/" + getName() + " threads" + WHITE + " - " + I18n.translateToLocalFormatted(Omniscience.MODID + ".cmd.threads.comment")
-                        + "\n" + AQUA + "/" + getName() + " threads <id>" + WHITE + " - " + I18n.translateToLocalFormatted(Omniscience.MODID + ".cmd.threads.comment2")
-                        + "\n" + AQUA + "/" + getName() + " threads <id> stop" + WHITE + " - " + I18n.translateToLocalFormatted(Omniscience.MODID + ".cmd.threads.comment3");
+                return AQUA + "/" + getName() + " threads" + WHITE + " - " + I18n.translateToLocalFormatted(MODID + ".cmd.threads.comment")
+                        + "\n" + AQUA + "/" + getName() + " threads <id>" + WHITE + " - " + I18n.translateToLocalFormatted(MODID + ".cmd.threads.comment2")
+                        + "\n" + AQUA + "/" + getName() + " threads <id> stop" + WHITE + " - " + I18n.translateToLocalFormatted(MODID + ".cmd.threads.comment3");
 
             case "nbt":
-                return AQUA + "/" + getName() + " nbt hand" + WHITE + " - " + I18n.translateToLocalFormatted(Omniscience.MODID + ".cmd.nbt.comment")
-                        + "\n" + AQUA + "/" + getName() + " nbt self" + WHITE + " - " + I18n.translateToLocalFormatted(Omniscience.MODID + ".cmd.nbt.comment2")
-                        + "\n" + AQUA + "/" + getName() + " nbt nearestentity" + WHITE + " - " + I18n.translateToLocalFormatted(Omniscience.MODID + ".cmd.nbt.comment3");
+                return AQUA + "/" + getName() + " nbt hand" + WHITE + " - " + I18n.translateToLocalFormatted(MODID + ".cmd.nbt.comment")
+                        + "\n" + AQUA + "/" + getName() + " nbt self" + WHITE + " - " + I18n.translateToLocalFormatted(MODID + ".cmd.nbt.comment2")
+                        + "\n" + AQUA + "/" + getName() + " nbt nearestentity" + WHITE + " - " + I18n.translateToLocalFormatted(MODID + ".cmd.nbt.comment3");
+
+            case "profiling":
+                return AQUA + "/" + getName() + " profiling entities" + WHITE + " - " + I18n.translateToLocalFormatted(MODID + ".cmd.profiling.comment")
+                        + "\n" + AQUA + "/" + getName() + " profiling tileentities" + WHITE + " - " + I18n.translateToLocalFormatted(MODID + ".cmd.profiling.comment2")
+                        + "\n" + AQUA + "/" + getName() + " profiling events" + WHITE + " - " + I18n.translateToLocalFormatted(MODID + ".cmd.profiling.comment3")
+                        + "\n" + AQUA + "/" + getName() + " profiling eventobjects" + WHITE + " - " + I18n.translateToLocalFormatted(MODID + ".cmd.profiling.comment4")
+                        + "\n" + AQUA + "/" + getName() + " profiling eventmethods" + WHITE + " - " + I18n.translateToLocalFormatted(MODID + ".cmd.profiling.comment5");
 
             default:
-                return AQUA + "/" + getName() + " " + subcommand + WHITE + " - " + I18n.translateToLocalFormatted(Omniscience.MODID + ".cmd." + subcommand + ".comment");
+                return AQUA + "/" + getName() + " " + subcommand + WHITE + " - " + I18n.translateToLocalFormatted(MODID + ".cmd." + subcommand + ".comment");
         }
     }
 
@@ -115,6 +126,13 @@ public class Commands extends CommandBase
                         result.add("self");
                         result.add("nearestentity");
                         break;
+
+                    case "profiling":
+                        result.add("entities");
+                        result.add("tileentities");
+                        result.add("events");
+                        result.add("eventobjects");
+                        result.add("eventmethods");
                 }
                 break;
 
@@ -161,14 +179,14 @@ public class Commands extends CommandBase
 
                     if (id == -1)
                     {
-                        notifyCommandListener(sender, this, Omniscience.MODID + ".error.threads.notFound", args[1]);
+                        notifyCommandListener(sender, this, MODID + ".error.threads.notFound", args[1]);
                         return;
                     }
 
                     Thread thread = Debug.getThread(id);
                     if (thread == null)
                     {
-                        notifyCommandListener(sender, this, Omniscience.MODID + ".error.threads.notFound", args[1]);
+                        notifyCommandListener(sender, this, MODID + ".error.threads.notFound", args[1]);
                         return;
                     }
 
@@ -216,7 +234,7 @@ public class Commands extends CommandBase
                     case 2:
                         if (!(sender instanceof EntityPlayerMP))
                         {
-                            notifyCommandListener(sender, this, Omniscience.MODID + ".error.notPlayer", cmd);
+                            notifyCommandListener(sender, this, MODID + ".error.notPlayer", cmd);
                             return;
                         }
 
@@ -255,7 +273,7 @@ public class Commands extends CommandBase
                                 notifyNBT(sender, compound);
                                 notifyCommandListener(sender, this, "");
                             }
-                            else notifyCommandListener(sender, this, Omniscience.MODID + ".error.noEntityFound");
+                            else notifyCommandListener(sender, this, MODID + ".error.noEntityFound");
                         }
                         break;
                 }
@@ -312,17 +330,17 @@ public class Commands extends CommandBase
                         if (trackedEntities == null || !trackedEntities.contains(entity.getEntityId()))
                         {
                             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> PathVisualizer.pathTrackedEntities.computeIfAbsent(player, o -> new ArrayList<>()).add(entity.getEntityId()));
-                            notifyCommandListener(sender, this, Omniscience.MODID + ".cmd.pathing.start", entity.getDisplayName(), pos.getX(), pos.getY(), pos.getZ());
+                            notifyCommandListener(sender, this, MODID + ".cmd.pathing.start", entity.getDisplayName(), pos.getX(), pos.getY(), pos.getZ());
                         }
                         else
                         {
                             trackedEntities.remove((Integer) entity.getEntityId());
-                            notifyCommandListener(sender, this, Omniscience.MODID + ".cmd.pathing.stop", entity.getDisplayName(), pos.getX(), pos.getY(), pos.getZ());
+                            notifyCommandListener(sender, this, MODID + ".cmd.pathing.stop", entity.getDisplayName(), pos.getX(), pos.getY(), pos.getZ());
                         }
                     }
-                    else notifyCommandListener(sender, this, Omniscience.MODID + ".error.noEntityFound");
+                    else notifyCommandListener(sender, this, MODID + ".error.noEntityFound");
                 }
-                else notifyCommandListener(sender, this, Omniscience.MODID + ".error.notPlayer", cmd);
+                else notifyCommandListener(sender, this, MODID + ".error.notPlayer", cmd);
                 break;
             }
 
@@ -337,11 +355,67 @@ public class Commands extends CommandBase
                     {
                         for (String s : MCTools.getAITaskData((EntityLiving) entity)) notifyCommandListener(sender, this, s);
                     }
-                    else notifyCommandListener(sender, this, Omniscience.MODID + ".error.noEntityFound");
+                    else notifyCommandListener(sender, this, MODID + ".error.noEntityFound");
                 }
-                else notifyCommandListener(sender, this, Omniscience.MODID + ".error.notPlayer", cmd);
+                else notifyCommandListener(sender, this, MODID + ".error.notPlayer", cmd);
                 break;
             }
+
+
+            case "profiling":
+                if (OmniProfiler.INSTANCE.isRunning())
+                {
+                    notifyCommandListener(sender, this, MODID + ".error.profilerRunning");
+                    return;
+                }
+
+                switch (args.length)
+                {
+                    case 1:
+                        notifyCommandListener(sender, this, subUsage(cmd));
+                        break;
+
+                    case 2:
+                        Boolean flag = null;
+                        switch (args[1])
+                        {
+                            case "entities":
+                                flag = OmniTimeTracker.ENTITY_TIME_TRACKER.profile = !OmniTimeTracker.ENTITY_TIME_TRACKER.profile;
+                                break;
+
+                            case "tileentities":
+                                flag = OmniTimeTracker.TILE_ENTITY_TIME_TRACKER.profile = !OmniTimeTracker.TILE_ENTITY_TIME_TRACKER.profile;
+                                break;
+
+                            case "events":
+                                flag = OmniASMEventHandler.profileEvents = !OmniASMEventHandler.profileEvents;
+                                break;
+
+                            case "eventobjects":
+                                flag = OmniASMEventHandler.profileEventObjects = !OmniASMEventHandler.profileEventObjects;
+                                if (flag && !OmniASMEventHandler.profileEvents)
+                                {
+                                    OmniASMEventHandler.profileEvents = true;
+                                    notifyCommandListener(sender, this, MODID + "." + cmd + ".events.true");
+                                }
+                                break;
+
+                            case "eventmethods":
+                                flag = OmniASMEventHandler.profileEventMethods = !OmniASMEventHandler.profileEventMethods;
+                                if (flag && !OmniASMEventHandler.profileEvents)
+                                {
+                                    OmniASMEventHandler.profileEvents = true;
+                                    notifyCommandListener(sender, this, MODID + "." + cmd + ".events.true");
+                                }
+                                break;
+
+                            default:
+                                notifyCommandListener(sender, this, subUsage(cmd));
+                        }
+                        if (flag != null) notifyCommandListener(sender, this, MODID + "." + cmd + "." + args[1] + "." + flag);
+                        break;
+                }
+                break;
 
 
             default:

@@ -9,9 +9,7 @@ import com.fantasticsource.omniscience.hack.OmniProfiler;
 import com.fantasticsource.omniscience.hack.OmniTimeTracker;
 import com.fantasticsource.tools.ReflectionTool;
 import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.entity.Entity;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.client.ClientCommandHandler;
@@ -34,12 +32,13 @@ public class Omniscience
     public static final String NAME = "Omniscience Debugger";
     public static final String VERSION = "1.12.2.002c";
 
+
     static
     {
         ReflectionTool.set(MinecraftForge.class, "EVENT_BUS", null, new OmniEventBus(MinecraftForge.EVENT_BUS));
 
-        ReflectionTool.set(TimeTracker.class, new String[]{"TILE_ENTITY_UPDATE"}, null, new OmniTimeTracker<TileEntity>());
-        ReflectionTool.set(TimeTracker.class, new String[]{"ENTITY_UPDATE"}, null, new OmniTimeTracker<Entity>());
+        ReflectionTool.set(TimeTracker.class, new String[]{"TILE_ENTITY_UPDATE"}, null, OmniTimeTracker.TILE_ENTITY_TIME_TRACKER);
+        ReflectionTool.set(TimeTracker.class, new String[]{"ENTITY_UPDATE"}, null, OmniTimeTracker.ENTITY_TIME_TRACKER);
 
 
         MinecraftForge.EVENT_BUS.register(Omniscience.class);

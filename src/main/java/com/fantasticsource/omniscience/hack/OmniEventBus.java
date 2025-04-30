@@ -34,7 +34,7 @@ public class OmniEventBus extends EventBus
                 listeners2.put(entry.getKey(), newList);
                 for (IEventListener originalListener : entry.getValue())
                 {
-                    if (originalListener instanceof ASMEventHandler) newList.add(new OmniASMEventHandler((ASMEventHandler) originalListener));
+                    if (originalListener instanceof ASMEventHandler && !originalListener.toString().contains("OmniProfiler")) newList.add(new OmniASMEventHandler((ASMEventHandler) originalListener));
                     else newList.add(originalListener);
                 }
             }
@@ -107,7 +107,8 @@ public class OmniEventBus extends EventBus
             Constructor<?> ctr = eventType.getConstructor();
             ctr.setAccessible(true);
             Event event = (Event) ctr.newInstance();
-            final OmniASMEventHandler asm = new OmniASMEventHandler(new ASMEventHandler(target, method, owner, IGenericEvent.class.isAssignableFrom(eventType)));
+            ASMEventHandler original = new ASMEventHandler(target, method, owner, IGenericEvent.class.isAssignableFrom(eventType));
+            final ASMEventHandler asm = original.toString().contains("OmniProfiler") ? original : new OmniASMEventHandler(original);
 
             IEventListener listener = asm;
             if (IContextSetter.class.isAssignableFrom(eventType))

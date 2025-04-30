@@ -36,7 +36,7 @@ public class ClientCommands extends CommandBase implements IClientCommand
     @Override
     public String getName()
     {
-        return "omnic";
+        return "omniclient";
     }
 
     @Override
@@ -44,8 +44,7 @@ public class ClientCommands extends CommandBase implements IClientCommand
     {
         ArrayList<String> names = new ArrayList<>();
 
-        names.add("omniclient");
-        names.add(MODID + "client");
+        names.add("omniscienceclient");
 
         return names;
     }

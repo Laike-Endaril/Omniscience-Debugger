@@ -24,11 +24,13 @@ But earliest execution is still from a runtime agent (premain), and both require
 
 TODO =======================================================================================================================================
 
-Fix log spam issue from CodePointPrinter
+Add commands to toggle CodePointPrinter (one for server and another for client)
 
-Differentiate between @Subscribe events based on method name in addition to mod container?
+Improve profiler call overhead and/or account for it in results
+Might be able to improve it by doing a more direct push-to-queue somehow?
 
 Make a way to COMPARE two different sets of profiling results (from files) (showing the differences between the two as +/- values)
+May want to use CSV files for this?
 
 Use a SortableTable to organize data
 Change post-profiling output commands to allow definition of columns you want to display

@@ -1,36 +1,57 @@
-omniscience.literal1=%s
+omnisciencedebugger.literal1=%s
 
 
 
-omniscience.cmd.threads.comment=§dShows info for all threads; id, name, cpu, heap allocation (cpu and heap are running totals; GC removals are not accounted for)
-omniscience.cmd.threads.comment2=§dShows detailed info for the thread with the given id
-omniscience.cmd.threads.comment3=§cUNSAFE! - Stops the given thread
+omnisciencedebugger.cmd.threads.comment=§dShows info for all threads; id, name, cpu, heap allocation (cpu and heap are running totals; GC removals are not accounted for)
+omnisciencedebugger.cmd.threads.comment2=§dShows detailed info for the thread with the given id
+omnisciencedebugger.cmd.threads.comment3=§cUNSAFE! - Stops the given thread
 
-omniscience.cmd.nbt.comment=§dShows all NBT in the item in your main hand
-omniscience.cmd.nbt.comment2=§dShows all NBT in YOU
-omniscience.cmd.nbt.comment3=§cShows all NBT in the nearest entity
+omnisciencedebugger.cmd.nbt.comment=§dShows all NBT in the item in your main hand
+omnisciencedebugger.cmd.nbt.comment2=§dShows all NBT in YOU
+omnisciencedebugger.cmd.nbt.comment3=§cShows all NBT in the nearest entity
 
-omniscience.cmd.memory.comment=§dShows basic JVM memory usage data
+omnisciencedebugger.cmd.profiling.comment=§dToggles entity-based profiling
+omnisciencedebugger.cmd.profiling.comment2=§dToggles tile-entity-based profiling
+omnisciencedebugger.cmd.profiling.comment3=§dToggles event-based profiling
+omnisciencedebugger.cmd.profiling.comment4=§dToggles event-object-based profiling
+omnisciencedebugger.cmd.profiling.comment5=§dToggles event-method-based profiling
 
-omniscience.cmd.entities.comment=§dShows how many entities are currently loaded
+omnisciencedebugger.cmd.memory.comment=§dShows basic JVM memory usage data
 
-omniscience.cmd.pathing.comment=§dShows or hides the path of the nearest entity
-omniscience.cmd.pathing.start=§aPathing is now visible for %s @ %s, %s, %s
-omniscience.cmd.pathing.stop=§cPathing is no longer visible for %s @ %s, %s, %s
+omnisciencedebugger.cmd.entities.comment=§dShows how many entities are currently loaded
 
-omniscience.cmd.ai.comment=§dShows the AI tasks of the nearest entity
+omnisciencedebugger.cmd.pathing.comment=§dShows or hides the path of the nearest entity
+omnisciencedebugger.cmd.pathing.start=§aPathing is now visible for %s @ %s, %s, %s
+omnisciencedebugger.cmd.pathing.stop=§cPathing is no longer visible for %s @ %s, %s, %s
 
-
-
-omniscience.ccmd.screens.comment=§dShows info on recently shown GuiScreens
-
-omniscience.ccmd.nbt.comment=§dShows all NBT in the item in your main hand
-omniscience.ccmd.nbt.comment2=§dShows all NBT in YOU
-omniscience.ccmd.nbt.comment3=§cShows all NBT in the nearest entity
+omnisciencedebugger.cmd.ai.comment=§dShows the AI tasks of the nearest entity
 
 
 
-omniscience.error.threads.notFound=§cThread not found: %s
+omnisciencedebugger.ccmd.screens.comment=§dShows info on recently shown GuiScreens
 
-omniscience.error.notPlayer=§cOnly players can use the "%s" subcommand
-omniscience.error.noEntityFound=§cNo entities found nearby
+omnisciencedebugger.ccmd.nbt.comment=§dShows all NBT in the item in your main hand
+omnisciencedebugger.ccmd.nbt.comment2=§dShows all NBT in YOU
+omnisciencedebugger.ccmd.nbt.comment3=§cShows all NBT in the nearest entity
+
+
+
+omnisciencedebugger.error.threads.notFound=§cThread not found: %s
+
+omnisciencedebugger.error.notPlayer=§cOnly players can use the "%s" subcommand
+omnisciencedebugger.error.noEntityFound=§cNo entities found nearby
+
+omnisciencedebugger.error.profilerRunning=§cCannot do this while the profiler is running
+
+
+
+omnisciencedebugger.profiling.entities.true=§aEntity profiling is now ON
+omnisciencedebugger.profiling.entities.false=§cEntity profiling is now OFF
+omnisciencedebugger.profiling.tileentities.true=§aTile entity profiling is now ON
+omnisciencedebugger.profiling.tileentities.false=§cTile entity profiling is now OFF
+omnisciencedebugger.profiling.events.true=§aEvent profiling is now ON
+omnisciencedebugger.profiling.events.false=§cEvent profiling is now OFF
+omnisciencedebugger.profiling.eventobjects.true=§aEvent object profiling is now ON
+omnisciencedebugger.profiling.eventobjects.false=§cEvent object profiling is now OFF
+omnisciencedebugger.profiling.eventmethods.true=§aEvent method profiling is now ON
+omnisciencedebugger.profiling.eventmethods.false=§cEvent method profiling is now OFF
