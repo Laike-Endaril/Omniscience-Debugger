@@ -2,7 +2,6 @@ package com.fantasticsource.omniscience.client;
 
 import com.fantasticsource.mctools.MCTools;
 import com.fantasticsource.omniscience.CodePointPrinter;
-import com.fantasticsource.omniscience.Omniscience;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
@@ -126,15 +125,6 @@ public class ClientCommands extends CommandBase implements IClientCommand
                         result.add("hand");
                         result.add("self");
                         result.add("nearestentity");
-                        break;
-                }
-                break;
-
-            case 3:
-                switch (args[0])
-                {
-                    case "threads":
-                        result.add("stop");
                         break;
                 }
                 break;
