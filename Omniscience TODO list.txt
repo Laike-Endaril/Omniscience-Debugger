@@ -24,6 +24,16 @@ But earliest execution is still from a runtime agent (premain), and both require
 
 TODO =======================================================================================================================================
 
+
+
+I CAN ADD CODE FOR DETECTING WHICH MODS ARE SCREWING UP THEIR STARTSECTION/ENDSECTIONS COUNT MISMATCH!!!
+Just record the current profiling node when entering a @Subscribe, then compare when exiting!
+Might even be able to somewhat fix it in the case of "more startsection than endsection" by consolidating all subsections of that @Subscribe (removing all subnodes of the event)
+
+Add client-side threads command
+
+
+
 Improve profiler call overhead if possible
 If not, maybe account for it in results
 Might be able to improve it by doing a more direct push-to-queue somehow?
