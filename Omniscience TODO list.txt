@@ -26,11 +26,23 @@ TODO ===========================================================================
 
 
 
+CHECK ISSUE IN ISSUE TRACKER!
+
+Add "undefined" to printouts / views of profiling results for events that have more than a certain amount unaccounted for in any main column
+
+Add per-AI task support (command toggle)
+
+Add client-side threads command
+
+Add client-side profiler support
+
+Add a profiler GUI
+
 I CAN ADD CODE FOR DETECTING WHICH MODS ARE SCREWING UP THEIR STARTSECTION/ENDSECTIONS COUNT MISMATCH!!!
 Just record the current profiling node when entering a @Subscribe, then compare when exiting!
 Might even be able to somewhat fix it in the case of "more startsection than endsection" by consolidating all subsections of that @Subscribe (removing all subnodes of the event)
 
-Add client-side threads command
+Add checks to blame mods for deferred computation if/where possible (lighting updates?)
 
 
 
