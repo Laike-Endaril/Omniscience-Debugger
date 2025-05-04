@@ -8,6 +8,7 @@ import net.minecraft.util.text.TextFormatting;
 import org.objectweb.asm.util.ASMifier;
 import sun.management.HotSpotDiagnostic;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
@@ -226,7 +227,7 @@ public class Debug
     {
         try
         {
-            HOTSPOT_MX_BEAN.dumpHeap(filename + ".hprof", onlyLiveObjects);
+            HOTSPOT_MX_BEAN.dumpHeap(filename + File.separator + "dump.hprof", onlyLiveObjects);
             return true;
         }
         catch (IOException e)
