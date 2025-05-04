@@ -14,6 +14,7 @@ import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
 import java.lang.management.ThreadInfo;
+import java.nio.file.FileSystemException;
 import java.util.ArrayList;
 
 public class Debug
@@ -227,6 +228,12 @@ public class Debug
     {
         try
         {
+            File file = new File(filename);
+            for (int i = 0; i < 100; i++)
+            {
+                if (file.mkdirs()) break;
+                if (i == 99) throw new FileSystemException("Could not create directory: " + filename);
+            }
             HOTSPOT_MX_BEAN.dumpHeap(filename + File.separator + "dump.hprof", onlyLiveObjects);
             return true;
         }
