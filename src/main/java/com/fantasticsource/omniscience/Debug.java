@@ -2,10 +2,13 @@ package com.fantasticsource.omniscience;
 
 import com.fantasticsource.mctools.ServerTickTimer;
 import com.fantasticsource.tools.datastructures.SortableTable;
+import com.sun.management.HotSpotDiagnosticMXBean;
 import com.sun.management.ThreadMXBean;
 import net.minecraft.util.text.TextFormatting;
 import org.objectweb.asm.util.ASMifier;
+import sun.management.HotSpotDiagnostic;
 
+import java.io.IOException;
 import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
@@ -17,6 +20,7 @@ public class Debug
     public static final Runtime RUNTIME = Runtime.getRuntime();
     public static final ThreadMXBean THREAD_MX_BEAN = ((ThreadMXBean) ManagementFactory.getThreadMXBean());
     public static final RuntimeMXBean RUNTIME_MX_BEAN = ManagementFactory.getRuntimeMXBean();
+    public static final HotSpotDiagnosticMXBean HOTSPOT_MX_BEAN = new HotSpotDiagnostic();
     protected static long serverThreadID = -1;
 
     public static void init()
@@ -215,6 +219,23 @@ public class Debug
         String s = RUNTIME_MX_BEAN.getName();
         return Integer.parseInt(s.substring(0, s.indexOf("@")));
     }
+
+
+    //"Live" objects are objects that are still reachable / referenced from other objects, ie. won't be garbage collected
+    public static boolean dumpHeap(String filename, boolean onlyLiveObjects)
+    {
+        try
+        {
+            HOTSPOT_MX_BEAN.dumpHeap(filename + ".hprof", onlyLiveObjects);
+            return true;
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 
     public static String getClassPath(Class cls)
     {

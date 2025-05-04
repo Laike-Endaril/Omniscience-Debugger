@@ -5,6 +5,7 @@ import com.fantasticsource.omniscience.client.PathVisualizer;
 import com.fantasticsource.omniscience.hack.OmniASMEventHandler;
 import com.fantasticsource.omniscience.hack.OmniProfiler;
 import com.fantasticsource.omniscience.hack.OmniTimeTracker;
+import com.fantasticsource.tools.Timestamp;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
@@ -20,6 +21,7 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import javax.annotation.Nullable;
+import java.io.File;
 import java.util.*;
 
 import static com.fantasticsource.omniscience.Omniscience.MODID;
@@ -85,6 +87,10 @@ public class Commands extends CommandBase
                         + "\n" + AQUA + "/" + getName() + " nbt self" + WHITE + " - " + I18n.translateToLocalFormatted(MODID + ".cmd.nbt.comment2")
                         + "\n" + AQUA + "/" + getName() + " nbt nearestentity" + WHITE + " - " + I18n.translateToLocalFormatted(MODID + ".cmd.nbt.comment3");
 
+            case "memory":
+                return AQUA + "/" + getName() + " memory print" + WHITE + " - " + I18n.translateToLocalFormatted(MODID + ".cmd.memory.comment")
+                        + "\n" + AQUA + "/" + getName() + " memory dumpfile" + WHITE + " - " + I18n.translateToLocalFormatted(MODID + ".cmd.memory.comment2");
+
             case "profiling":
                 return AQUA + "/" + getName() + " profiling entities" + WHITE + " - " + I18n.translateToLocalFormatted(MODID + ".cmd.profiling.comment")
                         + "\n" + AQUA + "/" + getName() + " profiling tileentities" + WHITE + " - " + I18n.translateToLocalFormatted(MODID + ".cmd.profiling.comment2")
@@ -127,12 +133,18 @@ public class Commands extends CommandBase
                         result.add("nearestentity");
                         break;
 
+                    case "memory":
+                        result.add("print");
+                        result.add("dumpfile");
+                        break;
+
                     case "profiling":
                         result.add("entities");
                         result.add("tileentities");
                         result.add("events");
                         result.add("eventobjects");
                         result.add("eventmethods");
+                        break;
                 }
                 break;
 
@@ -281,7 +293,32 @@ public class Commands extends CommandBase
 
 
             case "memory":
-                notifyCommandListener(sender, this, "omniscience.literal1", Debug.memData());
+                switch (args.length)
+                {
+                    case 1:
+                        notifyCommandListener(sender, this, "print");
+                        notifyCommandListener(sender, this, "dumpfile");
+                        break;
+
+                    case 2:
+                        switch (args[1])
+                        {
+                            case "print":
+                                notifyCommandListener(sender, this, MODID + ".literal1", Debug.memData());
+                                break;
+
+                            case "dumpfile":
+                                Timestamp timestamp = Timestamp.getInstance();
+                                String filename = MCTools.getConfigDir() + ".." + File.separator + "debug" + File.separator + timestamp.getYearString() + "-" + timestamp.getMonthString() + "-" + timestamp.getDayString() + "_" + timestamp.getHourString() + "-" + timestamp.getMinuteString() + "-" + timestamp.getSecondString();
+                                System.out.println(filename);
+                                if (Debug.dumpHeap(filename, true))
+                                {
+                                    notifyCommandListener(sender, this, MODID + ".heapdump", filename + ".hprof");
+                                }
+                                break;
+                        }
+                        break;
+                }
                 break;
 
 

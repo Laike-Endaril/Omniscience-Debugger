@@ -10,13 +10,14 @@ omnisciencedebugger.cmd.nbt.comment=§dShows all NBT in the item in your main ha
 omnisciencedebugger.cmd.nbt.comment2=§dShows all NBT in YOU
 omnisciencedebugger.cmd.nbt.comment3=§cShows all NBT in the nearest entity
 
+omnisciencedebugger.cmd.memory.comment=§dShows basic JVM memory usage data
+omnisciencedebugger.cmd.memory.comment2=§dDumps the java heap to a file for external examination with a memory editor
+
 omnisciencedebugger.cmd.profiling.comment=§dToggles entity-based profiling
 omnisciencedebugger.cmd.profiling.comment2=§dToggles tile-entity-based profiling
 omnisciencedebugger.cmd.profiling.comment3=§dToggles event-based profiling
 omnisciencedebugger.cmd.profiling.comment4=§dToggles event-object-based profiling
 omnisciencedebugger.cmd.profiling.comment5=§dToggles event-method-based profiling
-
-omnisciencedebugger.cmd.memory.comment=§dShows basic JVM memory usage data
 
 omnisciencedebugger.cmd.entities.comment=§dShows how many entities are currently loaded
 
@@ -60,3 +61,5 @@ omnisciencedebugger.profiling.eventmethods.false=§cEvent method profiling is no
 
 omnisciencedebugger.codeprinter.true=§aCode printing during massive lag is now ON
 omnisciencedebugger.codeprinter.false=§cCode printing during massive lag is now OFF
+
+omnisciencedebugger.heapdump=§aJava heap output to %s

@@ -26,6 +26,10 @@ TODO ===========================================================================
 
 
 
+Disable lag detectors for both server and client (logical) during resource reload on client application
+
+Make GCMessageer threshold configurable
+
 CHECK ISSUE IN ISSUE TRACKER!
 
 Add "undefined" to printouts / views of profiling results for events that have more than a certain amount unaccounted for in any main column
