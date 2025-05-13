@@ -19,6 +19,11 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class OmniEventBus extends EventBus
 {
+    public static final String[] ASM_EVENT_PARTIALNAME_BLACKLIST = new String[]{"OmniProfiler"};
+
+    public static boolean verbose = false;
+
+
     public ConcurrentHashMap<Object, ArrayList<IEventListener>> listeners2 = (ConcurrentHashMap<Object, ArrayList<IEventListener>>) ReflectionTool.get(EventBus.class, "listeners", this);
     public Map<Object, ModContainer> listenerOwners2 = (Map<Object, ModContainer>) ReflectionTool.get(EventBus.class, "listenerOwners", this);
 
@@ -34,7 +39,11 @@ public class OmniEventBus extends EventBus
                 listeners2.put(entry.getKey(), newList);
                 for (IEventListener originalListener : entry.getValue())
                 {
-                    if (originalListener instanceof ASMEventHandler && !originalListener.toString().contains("OmniProfiler")) newList.add(new OmniASMEventHandler((ASMEventHandler) originalListener));
+                    if (originalListener instanceof ASMEventHandler)
+                    {
+                        if (shouldWrap((ASMEventHandler) originalListener)) newList.add(new OmniASMEventHandler((ASMEventHandler) originalListener));
+                        else newList.add(originalListener);
+                    }
                     else newList.add(originalListener);
                 }
             }
@@ -85,7 +94,7 @@ public class OmniEventBus extends EventBus
 
                         if (!Event.class.isAssignableFrom(eventType))
                         {
-                            throw new IllegalArgumentException("Method " + method + " has @SubscribeEvent annotation, but takes a argument that is not an Event " + eventType);
+                            throw new IllegalArgumentException("Method " + method + " has @SubscribeEvent annotation, but takes an argument that is not an Event " + eventType);
                         }
 
                         register(eventType, target, real, activeModContainer, listeners2);
@@ -100,7 +109,21 @@ public class OmniEventBus extends EventBus
         }
     }
 
-    private void register(Class<?> eventType, Object target, Method method, final ModContainer owner, ConcurrentHashMap<Object, ArrayList<IEventListener>> listeners)
+
+    protected boolean shouldWrap(ASMEventHandler originalEvent)
+    {
+        String originalListenerString = originalEvent.toString();
+        for (String partialName : ASM_EVENT_PARTIALNAME_BLACKLIST)
+        {
+            if (originalListenerString.contains(partialName)) return false;
+        }
+
+        if (verbose) System.out.println("Wrapping event: " + originalEvent.toString());
+        return true;
+    }
+
+
+    protected void register(Class<?> eventType, Object target, Method method, final ModContainer owner, ConcurrentHashMap<Object, ArrayList<IEventListener>> listeners)
     {
         try
         {
@@ -108,7 +131,7 @@ public class OmniEventBus extends EventBus
             ctr.setAccessible(true);
             Event event = (Event) ctr.newInstance();
             ASMEventHandler original = new ASMEventHandler(target, method, owner, IGenericEvent.class.isAssignableFrom(eventType));
-            final ASMEventHandler asm = original.toString().contains("OmniProfiler") ? original : new OmniASMEventHandler(original);
+            final ASMEventHandler asm = shouldWrap(original) ? new OmniASMEventHandler(original) : original;
 
             IEventListener listener = asm;
             if (IContextSetter.class.isAssignableFrom(eventType))

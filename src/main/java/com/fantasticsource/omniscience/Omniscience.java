@@ -33,9 +33,12 @@ public class Omniscience
     public static final String VERSION = "1.12.2.003";
 
 
+    public static final OmniEventBus OMNI_EVENT_BUS = new OmniEventBus(MinecraftForge.EVENT_BUS);
+
     static
     {
-        ReflectionTool.set(MinecraftForge.class, "EVENT_BUS", null, new OmniEventBus(MinecraftForge.EVENT_BUS));
+        ReflectionTool.set(MinecraftForge.class, "EVENT_BUS", null, OMNI_EVENT_BUS);
+        ReflectionTool.set(FMLCommonHandler.class, "eventBus", FMLCommonHandler.instance(), OMNI_EVENT_BUS);
 
         ReflectionTool.set(TimeTracker.class, new String[]{"TILE_ENTITY_UPDATE"}, null, OmniTimeTracker.TILE_ENTITY_TIME_TRACKER);
         ReflectionTool.set(TimeTracker.class, new String[]{"ENTITY_UPDATE"}, null, OmniTimeTracker.ENTITY_TIME_TRACKER);
