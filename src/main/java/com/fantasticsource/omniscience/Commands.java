@@ -310,10 +310,9 @@ public class Commands extends CommandBase
                             case "dumpfile":
                                 Timestamp timestamp = Timestamp.getInstance();
                                 String filename = MCTools.getConfigDir() + ".." + File.separator + "debug" + File.separator + timestamp.getYearString() + "-" + timestamp.getMonthString() + "-" + timestamp.getDayString() + "_" + timestamp.getHourString() + "-" + timestamp.getMinuteString() + "-" + timestamp.getSecondString();
-                                System.out.println(filename);
                                 if (Debug.dumpHeap(filename, true))
                                 {
-                                    notifyCommandListener(sender, this, MODID + ".heapdump", filename + ".hprof");
+                                    notifyCommandListener(sender, this, MODID + ".heapdump", filename + File.separator + "dump.hprof");
                                 }
                                 break;
                         }

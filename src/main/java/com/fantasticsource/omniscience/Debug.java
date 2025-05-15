@@ -2,11 +2,9 @@ package com.fantasticsource.omniscience;
 
 import com.fantasticsource.mctools.ServerTickTimer;
 import com.fantasticsource.tools.datastructures.SortableTable;
-import com.sun.management.HotSpotDiagnosticMXBean;
 import com.sun.management.ThreadMXBean;
 import net.minecraft.util.text.TextFormatting;
 import org.objectweb.asm.util.ASMifier;
-import sun.management.HotSpotDiagnostic;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,7 +20,6 @@ public class Debug
     public static final Runtime RUNTIME = Runtime.getRuntime();
     public static final ThreadMXBean THREAD_MX_BEAN = ((ThreadMXBean) ManagementFactory.getThreadMXBean());
     public static final RuntimeMXBean RUNTIME_MX_BEAN = ManagementFactory.getRuntimeMXBean();
-    public static final HotSpotDiagnosticMXBean HOTSPOT_MX_BEAN = new HotSpotDiagnostic();
     protected static long serverThreadID = -1;
 
     public static void init()
@@ -234,7 +231,7 @@ public class Debug
                 if (file.mkdirs()) break;
                 if (i == 99) throw new FileSystemException("Could not create directory: " + filename);
             }
-            HOTSPOT_MX_BEAN.dumpHeap(filename + File.separator + "dump.hprof", onlyLiveObjects);
+            HeapDump.dumpHeap(filename + File.separator + "dump.hprof", onlyLiveObjects);
             return true;
         }
         catch (IOException e)
