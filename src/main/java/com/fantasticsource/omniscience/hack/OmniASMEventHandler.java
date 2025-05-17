@@ -7,14 +7,15 @@ import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.eventhandler.ASMEventHandler;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.lang.reflect.Method;
 
 public class OmniASMEventHandler extends ASMEventHandler
 {
     public static boolean profileEvents = true, profileEventObjects = true, profileEventMethods = true;
-    public static final Object DUMMY_TARGET = 0;
-    public static final Method DUMMY_METHOD = ReflectionTool.getMethod(String.class, "contains");
+    public static final Object DUMMY_TARGET = null;
+    public static final Method DUMMY_METHOD = ReflectionTool.getMethod(OmniASMEventHandler.class, "dummy");
 
     public ASMEventHandler original;
     public ModContainer modContainer;
@@ -66,5 +67,15 @@ public class OmniASMEventHandler extends ASMEventHandler
     public String toString()
     {
         return original.toString();
+    }
+
+
+    @SubscribeEvent
+    public static void dummy(DummyEvent event)
+    {
+    }
+
+    public static class DummyEvent extends Event
+    {
     }
 }
