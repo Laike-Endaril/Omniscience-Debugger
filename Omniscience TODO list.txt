@@ -29,7 +29,10 @@ Disable lag detectors for both server and client (logical) during resource reloa
 
 Make GCMessager threshold configurable
 
-CHECK ISSUE IN ISSUE TRACKER!
+CHECK ISSUE IN ISSUE TRACKER (Bad direct CPU calc for events inside of which GC happens to run)
+Apparently, the calls I'm doing right now don't even technically get the GC pause time, depending on the particular GC; they get the GC run time
+I should probably use the GC run time for garbage blame calcs, but the actual GC pause time for CPU time calcs
+Look into com.sun.management.GarbageCollectorMXBean (same classname, but different than the one I'm currently using)
 
 Add "undefined" to printouts / views of profiling results for events that have more than a certain amount unaccounted for in any main column
 
